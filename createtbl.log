@@ -1,0 +1,99 @@
+(c) Copyright IBM Corporation 1993,2007
+Command Line Processor for DB2 Client 11.5.4.0
+
+You can issue database manager commands and SQL statements from the command 
+prompt. For example:
+    db2 => connect to sample
+    db2 => bind sample.bnd
+
+For general help, type: ?.
+For command help, type: ? command, where command can be
+the first few keywords of a database manager command. For example:
+ ? CATALOG DATABASE for help on the CATALOG DATABASE command
+ ? CATALOG          for help on all of the CATALOG commands.
+
+To exit db2 interactive mode, type QUIT at the command prompt. Outside 
+interactive mode, all commands must be prefixed with 'db2'.
+To list the current command option settings, type LIST COMMAND OPTIONS.
+
+For more detailed help, refer to the Online Reference Manual.
+
+db2 => db2 => db2 => db2 => db2 => CONNECT TO cs421
+
+   Database Connection Information
+
+ Database server        = DB2/LINUXX8664 11.5.4.0
+ SQL authorization ID   = RZHANG68
+ Local database alias   = CS421
+
+
+db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Category ( cname VARCHAR(20) NOT NULL, prioNum INTEGER, PRIMARY KEY(cname) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Person ( hinsurNum VARCHAR(50) NOT NULL, pName VARCHAR(30) NOT NULL, gender VARCHAR(10) NOT NULL, pPostalCode VARCHAR(10), pStreetAddr VARCHAR(50), pCity VARCHAR(10), birthday DATE NOT NULL, phone VARCHAR(20), cname VARCHAR(20), PRIMARY KEY (hinsurNum), FOREIGN KEY (cname) REFERENCES Category )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE VaccineLocation ( vlName VARCHAR(30) NOT NULL, vPostalCode VARCHAR(10) NOT NULL, vStreetAddr VARCHAR(50) NOT NULL, vCity VARCHAR(10) NOT NULL, PRIMARY KEY (vlName) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Vaccine ( vName VARCHAR(20) NOT NULL, dose INTEGER NOT NULL, waitPeriod INTEGER NOT NULL, PRIMARY KEY (vName) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Batch ( vName VARCHAR(30) NOT NULL, batchNum VARCHAR(30) NOT NULL, numDoses INTEGER NOT NULL, manuDate DATE NOT NULL, expDate DATE NOT NULL, vlName VARCHAR(30), PRIMARY KEY (vName, batchNum), FOREIGN KEY (vlName) REFERENCES VaccineLocation, FOREIGN KEY (vName) REFERENCES Vaccine )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Vials ( vName VARCHAR(30) NOT NULL, batchNum VARCHAR(30) NOT NULL, vialID VARCHAR(30) NOT NULL, PRIMARY KEY (vName, vialID, batchNum), FOREIGN KEY (vName, batchNum) REFERENCES Batch )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Hospital ( vlName VARCHAR(30) NOT NULL, PRIMARY KEY (vlName), FOREIGN KEY (vlName) REFERENCES VaccineLocation )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Nurse ( cnlicenseNum VARCHAR(50) NOT NULL, nName VARCHAR(30) NOT NULL, vlName VARCHAR(30), PRIMARY KEY (cnlicenseNum), FOREIGN KEY (vlName) REFERENCES Hospital )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE VaccDates ( vlName VARCHAR(30) NOT NULL, vDate DATE NOT NULL, PRIMARY KEY (vlName, vDate), FOREIGN KEY (vlName) REFERENCES VaccineLocation )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Slots ( vSlot VARCHAR(10) NOT NULL, vlName VARCHAR(30) NOT NULL, vDate DATE NOT NULL, vTime VARCHAR(10) NOT NULL, asgndate DATE, hinsurnum VARCHAR(50), cnlicenseNum VARCHAR(50), vName VARCHAR(30), batchNum VARCHAR(30), vialID VARCHAR(30), PRIMARY KEY (vSlot, vlName, vDate, vTime), FOREIGN KEY (vlName, vDate) REFERENCES VaccDates, FOREIGN KEY (hinsurnum) REFERENCES Person, FOREIGN KEY (cnlicenseNum) REFERENCES Nurse, FOREIGN KEY (vName, vialID, batchNum) REFERENCES Vials )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE NurseAssignedTo ( cnlicenseNum VARCHAR(50) NOT NULL, vlName VARCHAR(30) NOT NULL, vDate DATE NOT NULL, PRIMARY KEY (cnlicenseNum, vlName, vDate), FOREIGN KEY (cnlicenseNum) REFERENCES Nurse, FOREIGN KEY (vlName, vDate) REFERENCES VaccDates )
+DB20000I  The SQL command completed successfully.
+
+db2 => alter table Slots modify column asgndate date NULL
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0104N  An unexpected token "modify" was found following "alter table Slots 
+".  Expected tokens may include:  "ADD".  SQLSTATE=42601
+
+db2 => alter table Slots modify column hinsurnum  VARCHAR(50) NULL
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0104N  An unexpected token "modify" was found following "alter table Slots 
+".  Expected tokens may include:  "ADD".  SQLSTATE=42601
+
+db2 => alter table Slots modify column cnlicenseNum VARCHAR(50) NULL
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0104N  An unexpected token "modify" was found following "alter table Slots 
+".  Expected tokens may include:  "ADD".  SQLSTATE=42601
+
+db2 => alter table Slots modify column vName VARCHAR(30) NULL
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0104N  An unexpected token "modify" was found following "alter table Slots 
+".  Expected tokens may include:  "ADD".  SQLSTATE=42601
+
+db2 => alter table Slots modify column batchNum VARCHAR(30) NULL
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0104N  An unexpected token "modify" was found following "alter table Slots 
+".  Expected tokens may include:  "ADD".  SQLSTATE=42601
+
+db2 => alter table Slots modify column vialID VARCHAR(30) NULL
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0104N  An unexpected token "modify" was found following "alter table Slots 
+".  Expected tokens may include:  "ADD".  SQLSTATE=42601
+
+db2 => 
